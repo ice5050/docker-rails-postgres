@@ -1,0 +1,28 @@
+version: '2'
+services:
+  app:
+    build: .
+    command: ash -c "rm -rf tmp/pids/* && rails server -b 0.0.0.0 -p 3000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=root
+      - DB_PASS=pass
+    volumes:
+      - .:/usr/app
+  db:
+    restart: always
+    image: sameersbn/postgresql:9.4-21
+    ports:
+      - "5432:5432"
+    environment:
+      - DEBUG=false
+      - DB_USER=root
+      - DB_PASS=pass
+      - DB_NAME=simpleapp
+    volumes:
+      - /srv/docker/postgresql:/var/lib/postgresql
